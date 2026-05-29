@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { useAuth } from "../Context/AuthContext"
+import { useNavigate } from 'react-router-dom'
+
 function Login() {
     
     const [identifier, setIdentifier] = useState('')
@@ -7,6 +9,8 @@ function Login() {
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
     const { login } = useAuth()
+
+    const navigate = useNavigate()
 
     const handleLogin = async () => {
         setError('')
@@ -25,6 +29,7 @@ function Login() {
             } else {
                 setSuccess('You have been logged in!')
                 login(data.user)
+                setTimeout(() => navigate('/'), 1500)
             }
         } catch (err) {
             setError('Something went wrong, try again')

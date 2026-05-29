@@ -1,5 +1,5 @@
-import Navbar from "../Components/Navbar"
-import Login from "../Components/login";
+import Navbar from "../Components/navbar";
+import Login from "../Components/Login";
 import SignUp from "../Components/SignUp";
 import { useState } from 'react'
 
@@ -7,11 +7,11 @@ function AuthPage() {
     const [isLoginMode, setIsLoginMode] = useState(true);
 
     return (
-        <>
-            <div className="fixed top-0 left-0 w-full z-50 bg-white">
+        <div className="min-h-screen bg-stone-800 font-mono">
+            <div className="fixed top-0 left-0 w-full z-50">
                 <Navbar />
             </div>
-            <div className="h-screen bg-stone-800 flex flex-col items-center justify-center font-mono">
+            <div className="flex flex-col items-center justify-center h-screen">
                 <div className="w-105 bg-stone-700 rounded-2xl border border-stone-500/40 shadow-xl flex flex-col items-center pt-6 px-8 pb-8">
                     
                     <div className="flex flex-row w-full mb-6 bg-stone-800 rounded-xl p-1">
@@ -39,7 +39,7 @@ function AuthPage() {
                     {isLoginMode ? <Login /> : <SignUp />}
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function SignUp() {
     const [username, setUsername] = useState('')
@@ -7,6 +8,7 @@ function SignUp() {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
+    const navigate = useNavigate()
 
     const handleSignUp = async () => {
         setError('')
@@ -29,7 +31,8 @@ function SignUp() {
             if (!response.ok) {
                 setError(data.error)
             } else {
-                setSuccess('Account created successfully!')
+                setSuccess('Account created successfully! Please Login')
+
             }
         } catch (err) {
             setError('Something went wrong, try again')
