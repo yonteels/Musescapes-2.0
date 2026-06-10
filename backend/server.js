@@ -466,4 +466,84 @@ app.get("/user/:user_id/playlists", async (req, res) => {
   }
 });
 
+app.get("/playlist/:id", async (req, res) => {
+    try {
+        const { id } = req.params
+        const playlistRes = await pool.query(`SELECT * FROM playlists WHERE id = $1`, [id])
+        const tracksRes = await pool.query(`SELECT * FROM playlist_tracks WHERE playlist_id = $1 ORDER BY track_order`, [id])
+        
+        // parse song_id back from JSON string
+        const tracks = tracksRes.rows.map(row => {
+            try {
+                return JSON.parse(row.song_id)
+            } catch {
+                return row
+            }
+        })
+
+        res.json({ playlist: playlistRes.rows[0], tracks })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ error: "Server error" })
+    }
+})
+
+app.get("/user/:user_id/favourites", async (req, res) => {
+    try {
+        const { user_id } = req.params
+        const result = await pool.query(
+            `SELECT * FROM playlists WHERE user_id = $1 AND name = 'Favorites'`,
+            [user_id]
+        )
+        res.json(result.rows[0])
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ error: 'Server error' })
+    }
+})
+
+app.get("/playlist/:playlist_id/tracks", async (req, res) => {
+    try {
+        const { playlist_id } = req.params
+        const result = await pool.query(
+            `SELECT * FROM playlist_tracks WHERE playlist_id = $1`,
+            [playlist_id]
+        )
+        res.json(result.rows)
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ error: 'Server error' })
+    }
+})
+
+app.delete("/playlist/:playlist_id/track", async (req, res) => {
+    try {
+        const { playlist_id } = req.params
+        const { song_id } = req.body
+
+        await pool.query(
+            `DELETE FROM playlist_tracks WHERE playlist_id = $1 AND song_id = $2`,
+            [playlist_id, song_id]
+        )
+
+        res.json({ message: "Removed from playlist" })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ error: "Server error" })
+    }
+})
+
+  app.delete("/playlist/:playlist_id", async (req,res) => {
+    try {
+      const {playlist_id} = req.params
+
+      await pool.query(
+        ``
+      )
+    } catch (err){
+      console.log(err)
+    }
+  })
+
+
 app.listen(5000, () => console.log("Server running on port 5000"));
